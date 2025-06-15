@@ -1,0 +1,39 @@
+# Node.js
+/node_modules
+.env
+dist
+.svelte-kit
+.vscode/
+
+# Java
+/target
+.gradle
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# Maven
+pom.xml.tag
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Log files
+*.log
+logs/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+
+# VS Code specific
+.vscode/
