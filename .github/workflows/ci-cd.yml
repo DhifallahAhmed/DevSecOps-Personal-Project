@@ -24,12 +24,16 @@ jobs:
           distribution: 'temurin'
 
       - name: Build with Maven
-        run: mvn clean install
-        working-directory: backend
+        run: ./mvnw clean install
+        working-directory: demo
 
       - name: Run Tests
-        run: mvn test
-        working-directory: backend
+        run: ./mvnw test
+        working-directory: demo
+
+      - name: Build Docker Image
+        run: docker build -t my-backend-app .
+        working-directory: demo
 
   frontend:
     name: Build Frontend
@@ -46,8 +50,8 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
-        working-directory: frontend
+        working-directory: my-svelte-app
 
       - name: Build Svelte App
         run: npm run build
-        working-directory: frontend
+        working-directory: my-svelte-app
