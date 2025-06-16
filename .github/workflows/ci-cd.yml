@@ -1,0 +1,57 @@
+name: Full Stack CI/CD
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  backend:
+    name: Build & Test Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Build with Maven
+        run: ./mvnw clean install
+        working-directory: demo
+
+      - name: Run Tests
+        run: ./mvnw test
+        working-directory: demo
+
+      - name: Build Docker Image
+        run: docker build -t my-backend-app .
+        working-directory: demo
+
+  frontend:
+    name: Build Frontend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pnpm i
+        working-directory: my-svelte-app
+
+      - name: Build Svelte App
+        run: npm run build
+        working-directory: my-svelte-app
