@@ -1,5 +1,7 @@
 <script>
 	import { onMount } from 'svelte';
+	const BACKEND_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080';
+
 
 	let todos = $state([]);
 	let newTask = $state('');
@@ -13,7 +15,7 @@
 
 	async function fetchTodos() {
 		try {
-            const response = await fetch('/api/todos');
+            const response = await fetch(`${BACKEND_URL}/api/todos`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
@@ -29,7 +31,7 @@
 		if (!newTask.trim()) return; 
 
         try {
-            const response = await fetch('/api/todos', {
+            const response = await fetch(`${BACKEND_URL}/api/todos`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
