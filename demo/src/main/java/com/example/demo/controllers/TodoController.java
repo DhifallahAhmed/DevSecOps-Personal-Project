@@ -1,11 +1,11 @@
-package controllers;
+package com.example.demo.controllers;
 
-import entities.ToDo;
+import com.example.demo.entities.ToDo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import repositories.TodoRepository;
+import com.example.demo.repositories.TodoRepository;
 
 import java.util.List;
 
