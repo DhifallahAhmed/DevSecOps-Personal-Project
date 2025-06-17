@@ -80,4 +80,4 @@ jobs:
         working-directory: my-svelte-app
 
       - name: Deploy to Netlify
-        run: curl -X POST d {} "${{ secrets.NETLIFY_BUILD_HOOK }}"
+        run: curl -X POST -d {} "${{ secrets.NETLIFY_BUILD_HOOK }}"
