@@ -1,12 +1,10 @@
-name: Full Stack CI/CD
+name: CI/CD
 
 on:
   push:
-    branches:
-      - dev
+    branches: [dev]
   pull_request:
-    branches:
-      - dev
+    branches: [dev]
 
 jobs:
   backend:
@@ -31,27 +29,52 @@ jobs:
         run: ./mvnw test
         working-directory: demo
 
-      - name: Build Docker Image
-        run: docker build -t my-backend-app .
-        working-directory: demo
+      - name: Trigger Render Deployment
+        run: curl -X GET "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
   frontend:
-    name: Build Frontend
+    name: Build & Deploy Frontend
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20]
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
 
       - name: Install dependencies
-        run: pnpm i
+        run: pnpm install
+        working-directory: my-svelte-app
+
+      - name: Audit for vulnerabilities
+        run: pnpm audit --audit-level=high
+        working-directory: my-svelte-app
+
+      - name: Lint Code
+        run: pnpm run lint
         working-directory: my-svelte-app
 
       - name: Build Svelte App
-        run: npm run build
+        run: pnpm run build
         working-directory: my-svelte-app
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v2.0
+        with:
+          publish-dir: ./my-svelte-app/build
+          production-branch: dev
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          netlify-auth-token: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          site-id: ${{ secrets.NETLIFY_SITE_ID }}
