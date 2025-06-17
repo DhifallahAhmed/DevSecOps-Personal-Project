@@ -10,11 +10,17 @@
     "lint": "eslint src --ext .svelte,.ts,.js"
   },
   "devDependencies": {
+    "@eslint/js": "^9.29.0",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "@typescript-eslint/parser": "^8.34.1",
     "eslint": "^9.29.0",
-    "eslint-plugin-svelte3": "^4.0.0",
+    "eslint-plugin-svelte": "^3.9.2",
+    "globals": "^16.2.0",
     "svelte": "^5.28.1",
+    "typescript-eslint": "^8.34.1",
     "vite": "^6.3.5"
+  },
+  "dependencies": {
+    "@eslint/migrate-config": "^1.5.1"
   }
 }
