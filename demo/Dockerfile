@@ -1,21 +1,15 @@
-# Use a base image with JDK 17 (Java Development Kit)
-FROM eclipse-temurin:17-jdk-jammy
+# -------- Stage 1: Build JAR --------
+FROM eclipse-temurin:17-jdk-jammy as builder
 
-# Set the working directory inside the container
 WORKDIR /app
-
-# Copy the entire Spring Boot project into the container
-# This includes source code, pom.xml, mvnw, etc.
 COPY . .
+RUN ./mvnw clean package -DskipTests
 
-# Build the Spring Boot application into a JAR file
-# -DskipTests is added to speed up the build for simplicity.
-# In a real CI/CD, you'd run tests separately.
-RUN ./mvnw package -DskipTests
+# -------- Stage 2: Run App --------
+FROM eclipse-temurin:17-jre-jammy
 
-# Expose the port your Spring Boot application runs on (default is 8080)
+WORKDIR /app
+COPY --from=builder /app/target/*.jar app.jar
+
 EXPOSE 8080
-
-# Define the command to run the application when the container starts
-# The `ls -t target/*.jar | head -n1` finds the most recently built JAR
-ENTRYPOINT ["sh", "-c", "java -jar $(ls /app/target/*.jar | head -n 1)"]
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
